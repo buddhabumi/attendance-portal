@@ -34,7 +34,7 @@ async function fetchEmployees() {
 
 async function fetchAttendance(employeeId, month) {
   try {
-    const url = `${SUPABASE_URL}/attendance?employee_id=eq.${encodeURIComponent(employeeId)}×tamp=gte.${month}-01T00:00:00+05:45×tamp=lte.${month}-31T23:59:59+05:45&select=*&order=timestamp.asc`;
+    const url = `${SUPABASE_URL}/attendance?employee_id=eq.${encodeURIComponent(employeeId)}×tamp=gte.${month}-01T00:00:00×tamp=lte.${month}-31T23:59:59&select=*&order=timestamp.asc`;
     console.log('Fetching attendance with URL:', url);
     const response = await fetch(url, {
       headers: {
@@ -115,15 +115,11 @@ async function calculateSalary(employeeId, month) {
   };
 }
 
-function displayNepaliCalendar() {
-  try {
-    const today = new NepaliDate();
-    const calendarDiv = document.getElementById('calendar');
-    calendarDiv.innerHTML = `<p>Today's Date (Nepali): ${today.format('YYYY-MM-DD')}</p>`;
-  } catch (error) {
-    showError('Failed to load Nepali calendar');
-    console.error('Nepali calendar error:', error);
-  }
+function displayCalendar() {
+  const calendarDiv = document.getElementById('calendar');
+  const today = new Date();
+  const formattedDate = today.toISOString().split('T')[0];
+  calendarDiv.innerHTML = `<p>Today's Date: ${formattedDate}</p>`;
 }
 
 async function populateEmployeeSelector() {
@@ -161,16 +157,17 @@ async function displayAttendance(employeeId, month) {
     const tableBody = document.querySelector('#attendance-table tbody');
     tableBody.innerHTML = '';
 
-    console.log('Rendering attendance for:', employeeId, month, 'Records:', attendance);
+    console.log('Attempting to render attendance for:', { employeeId, month, records: attendance });
 
     if (!attendance || attendance.length === 0) {
+      console.log('No records to display');
       tableBody.innerHTML = '<tr><td colspan="3">No attendance records found</td></tr>';
       return;
     }
 
     const groupedByDate = {};
     attendance.forEach(record => {
-      console.log('Processing record:', record);
+      console.log('Processing attendance record:', record);
       const date = record.timestamp.split('T')[0];
       if (!groupedByDate[date]) {
         groupedByDate[date] = { in: null, out: null };
@@ -184,14 +181,20 @@ async function displayAttendance(employeeId, month) {
 
     console.log('Grouped attendance by date:', groupedByDate);
 
+    if (Object.keys(groupedByDate).length === 0) {
+      console.log('No grouped records to display');
+      tableBody.innerHTML = '<tr><td colspan="3">No attendance records found</td></tr>';
+      return;
+    }
+
     Object.keys(groupedByDate).sort().forEach(date => {
       const record = groupedByDate[date];
-      const nepaliDate = new NepaliDate(new Date(date));
+      console.log('Rendering row for date:', date, 'Record:', record);
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td>${nepaliDate.format('YYYY-MM-DD')}</td>
-        <td>${record.in ? record.in.split('T')[1].split('+')[0] : '-'}</td>
-        <td>${record.out ? record.out.split('T')[1].split('+')[0] : '-'}</td>
+        <td>${date}</td>
+        <td>${record.in ? record.in.split('T')[1].split('.')[0] : '-'}</td>
+        <td>${record.out ? record.out.split('T')[1].split('.')[0] : '-'}</td>
       `;
       tableBody.appendChild(row);
     });
@@ -237,7 +240,7 @@ document.getElementById('employee-selector').addEventListener('change', updatePo
 document.getElementById('month-selector').addEventListener('change', updatePortal);
 
 document.addEventListener('DOMContentLoaded', async () => {
-  displayNepaliCalendar();
+  displayCalendar();
   const defaultEmployeeId = await populateEmployeeSelector();
   if (defaultEmployeeId) {
     document.getElementById('employee-selector').value = defaultEmployeeId;
