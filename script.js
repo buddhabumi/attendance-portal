@@ -1,5 +1,5 @@
-const SUPABASE_URL = 'https://your-project-id.supabase.co/rest/v1';
-const SUPABASE_KEY = 'YOUR_SUPABASE_KEY';
+const SUPABASE_URL = 'https://aoxwtvxavuddykkmlela.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFveHd0dnhhdnVkZHlra21sZWxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY0OTY0OTgsImV4cCI6MjA2MjA3MjQ5OH0.SXng4P6mo36mMOG1lwoTXjZ4e-p9kfNwzTnqlU2uFUo';
 
 async function fetchAttendance(month) {
   const response = await fetch(`${SUPABASE_URL}/attendance?select=*&timestamp=gte.${month}-01T00:00:00&timestamp=lte.${month}-31T23:59:59`, {
