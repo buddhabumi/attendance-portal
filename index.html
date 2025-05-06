@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Employee Attendance Portal</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="https://unpkg.com/nepali-date@1.0.2/dist/nepali-date.min.js"></script>
+  <script src="https://unpkg.com/nepali-date/dist/nepali-date.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -17,9 +17,9 @@
       <label for="month-selector">Select Month:</label>
       <select id="month-selector">
         <option value="2025-05">May 2025</option>
-        <!-- Populated dynamically -->
       </select>
     </div>
+    <div id="error-message" style="color: red; display: none;"></div>
     <h2>Employee Details</h2>
     <div id="employee-details"></div>
     <h2>Attendance Records</h2>
