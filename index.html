@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Attendance Portal</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/nepali-date@1.0.2/dist/nepali-date.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Employee Attendance Portal</h1>
+    <div id="calendar"></div>
+    <h2>Attendance Records</h2>
+    <select id="month-selector">
+      <option value="2025-05">May 2025</option>
+      <!-- Add more months as needed -->
+    </select>
+    <table id="attendance-table">
+      <thead>
+        <tr>
+          <th>Date (Nepali)</th>
+          <th>In Time</th>
+          <th>Out Time</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <h2>Salary Details</h2>
+    <div id="salary-details"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
