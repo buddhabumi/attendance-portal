@@ -51,3 +51,6 @@ th {
   margin: 20px 0;
   font-size: 1.1em;
 }
+#error-message {
+  margin: 10px 0;
+}
