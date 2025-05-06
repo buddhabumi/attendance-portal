@@ -11,11 +11,18 @@
   <div class="container">
     <h1>Employee Attendance Portal</h1>
     <div id="calendar"></div>
+    <div class="filters">
+      <label for="employee-selector">Select Employee:</label>
+      <select id="employee-selector"></select>
+      <label for="month-selector">Select Month:</label>
+      <select id="month-selector">
+        <option value="2025-05">May 2025</option>
+        <!-- Populated dynamically -->
+      </select>
+    </div>
+    <h2>Employee Details</h2>
+    <div id="employee-details"></div>
     <h2>Attendance Records</h2>
-    <select id="month-selector">
-      <option value="2025-05">May 2025</option>
-      <!-- Add more months as needed -->
-    </select>
     <table id="attendance-table">
       <thead>
         <tr>
