@@ -34,7 +34,7 @@ async function fetchEmployees() {
 
 async function fetchAttendance(employeeId, month) {
   try {
-    const url = `${SUPABASE_URL}/attendance?employee_id=eq.${encodeURIComponent(employeeId)}×tamp=gte.${month}-01T00:00:00+05:45×tamp=lte.${month}-31T23:59:59+05:45&select=*`;
+    const url = `${SUPABASE_URL}/attendance?employee_id=eq.${encodeURIComponent(employeeId)}×tamp=gte.${month}-01T00:00:00+05:45×tamp=lte.${month}-31T23:59:59+05:45&select=*&order=timestamp.asc`;
     console.log('Fetching attendance with URL:', url);
     const response = await fetch(url, {
       headers: {
@@ -42,7 +42,10 @@ async function fetchAttendance(employeeId, month) {
         'apikey': SUPABASE_KEY
       }
     });
-    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
+    }
     const data = await response.json();
     console.log('Fetched attendance:', data);
     return data;
@@ -154,7 +157,7 @@ async function displayAttendance(employeeId, month) {
     const tableBody = document.querySelector('#attendance-table tbody');
     tableBody.innerHTML = '';
 
-    if (attendance.length === 0) {
+    if (!attendance || attendance.length === 0) {
       tableBody.innerHTML = '<tr><td colspan="3">No attendance records found</td></tr>';
       return;
     }
@@ -184,8 +187,8 @@ async function displayAttendance(employeeId, month) {
       tableBody.appendChild(row);
     });
   } catch (error) {
-    showError('Failed to load attendance records');
-    console.error('Attendance display error:', error);
+    showError(`Failed to display attendance: ${error.message}`);
+    console.error('Display attendance error:', error);
   }
 }
 
