@@ -39,7 +39,8 @@ async function fetchAttendance(employeeId, month) {
     const response = await fetch(url, {
       headers: {
         'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'apikey': SUPABASE_KEY
+        'apikey': SUPABASE_KEY,
+        'Content-Type': 'application/json'
       }
     });
     if (!response.ok) {
@@ -48,6 +49,9 @@ async function fetchAttendance(employeeId, month) {
     }
     const data = await response.json();
     console.log('Fetched attendance:', data);
+    if (!data || data.length === 0) {
+      console.log('No attendance records returned for employee:', employeeId, 'month:', month);
+    }
     return data;
   } catch (error) {
     showError(`Failed to fetch attendance: ${error.message}`);
@@ -157,6 +161,8 @@ async function displayAttendance(employeeId, month) {
     const tableBody = document.querySelector('#attendance-table tbody');
     tableBody.innerHTML = '';
 
+    console.log('Rendering attendance for:', employeeId, month, 'Records:', attendance);
+
     if (!attendance || attendance.length === 0) {
       tableBody.innerHTML = '<tr><td colspan="3">No attendance records found</td></tr>';
       return;
@@ -164,6 +170,7 @@ async function displayAttendance(employeeId, month) {
 
     const groupedByDate = {};
     attendance.forEach(record => {
+      console.log('Processing record:', record);
       const date = record.timestamp.split('T')[0];
       if (!groupedByDate[date]) {
         groupedByDate[date] = { in: null, out: null };
@@ -174,6 +181,8 @@ async function displayAttendance(employeeId, month) {
         groupedByDate[date].out = record.timestamp;
       }
     });
+
+    console.log('Grouped attendance by date:', groupedByDate);
 
     Object.keys(groupedByDate).sort().forEach(date => {
       const record = groupedByDate[date];
