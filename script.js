@@ -34,7 +34,7 @@ async function fetchEmployees() {
 
 async function fetchAttendance(employeeId, month) {
   try {
-    const url = `${SUPABASE_URL}/attendance?employee_id=eq.${encodeURIComponent(employeeId)}×tamp=gte.${month}-01T00:00:00×tamp=lte.${month}-31T23:59:59&select=*&order=timestamp.asc`;
+    const url = `${SUPABASE_URL}/attendance?employee_id=eq.${encodeURIComponent(employeeId)}×tamp=gte.${month}-01T00:00:00+05:45×tamp=lte.${month}-31T23:59:59+05:45&select=*&order=timestamp.asc`;
     console.log('Fetching attendance with URL:', url);
     const response = await fetch(url, {
       headers: {
@@ -161,17 +161,16 @@ async function displayAttendance(employeeId, month) {
     const tableBody = document.querySelector('#attendance-table tbody');
     tableBody.innerHTML = '';
 
-    console.log('Attempting to render attendance for:', { employeeId, month, records: attendance });
+    console.log('Rendering attendance for:', employeeId, month, 'Records:', attendance);
 
     if (!attendance || attendance.length === 0) {
-      console.log('No records to display');
       tableBody.innerHTML = '<tr><td colspan="3">No attendance records found</td></tr>';
       return;
     }
 
     const groupedByDate = {};
     attendance.forEach(record => {
-      console.log('Processing attendance record:', record);
+      console.log('Processing record:', record);
       const date = record.timestamp.split('T')[0];
       if (!groupedByDate[date]) {
         groupedByDate[date] = { in: null, out: null };
@@ -185,21 +184,14 @@ async function displayAttendance(employeeId, month) {
 
     console.log('Grouped attendance by date:', groupedByDate);
 
-    if (Object.keys(groupedByDate).length === 0) {
-      console.log('No grouped records to display');
-      tableBody.innerHTML = '<tr><td colspan="3">No attendance records found</td></tr>';
-      return;
-    }
-
     Object.keys(groupedByDate).sort().forEach(date => {
       const record = groupedByDate[date];
       const nepaliDate = new NepaliDate(new Date(date));
-      console.log('Rendering row for date:', date, 'Nepali:', nepaliDate.format('YYYY-MM-DD'), 'Record:', record);
       const row = document.createElement('tr');
       row.innerHTML = `
         <td>${nepaliDate.format('YYYY-MM-DD')}</td>
-        <td>${record.in ? record.in.split('T')[1].split('.')[0] : '-'}</td>
-        <td>${record.out ? record.out.split('T')[1].split('.')[0] : '-'}</td>
+        <td>${record.in ? record.in.split('T')[1].split('+')[0] : '-'}</td>
+        <td>${record.out ? record.out.split('T')[1].split('+')[0] : '-'}</td>
       `;
       tableBody.appendChild(row);
     });
