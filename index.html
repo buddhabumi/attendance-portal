@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Employee Attendance Portal</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="https://unpkg.com/nepali-date/dist/nepali-date.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -14,7 +13,7 @@
     <div class="filters">
       <label for="employee-selector">Select Employee:</label>
       <select id="employee-selector"></select>
-      <label for="month-selector">Select Month Incase Data Not Visible:</label>
+      <label for="month-selector">Select Month:</label>
       <select id="month-selector">
         <option value="2025-05">May 2025</option>
       </select>
@@ -26,7 +25,7 @@
     <table id="attendance-table">
       <thead>
         <tr>
-          <th>Date (Nepali)</th>
+          <th>Date</th>
           <th>In Time</th>
           <th>Out Time</th>
         </tr>
